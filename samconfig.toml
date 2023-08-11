@@ -1,0 +1,10 @@
+version = 0.1
+
+[local.deploy.parameters]
+stack_name = "url-2-pdf-s3"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-6e6c2ff9"
+s3_prefix = "url-2-pdf-s3"
+region = "us-east-1"
+confirm_changeset = false
+capabilities = "CAPABILITY_IAM"
+image_repositories = []

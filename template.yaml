@@ -1,0 +1,25 @@
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  Url2PdfS3Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      FunctionName: 'url-to-pdf-s3'
+      Handler: main.handler
+      Runtime: python3.9
+      Timeout: 900
+      Tracing: Active
+      MemorySize: 256
+      ReservedConcurrentExecutions: 5
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Layers:
+        - !Ref libs
+
+  libs:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: wkhtmltopdf-lib
+      Description: wkhtmltopdf bin.
+      ContentUri: wkhtmltopdf/.

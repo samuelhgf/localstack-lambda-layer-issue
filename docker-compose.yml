@@ -1,0 +1,42 @@
+version: '3.8'
+
+networks:
+  localstack_network:
+    driver: bridge
+
+services:
+  localstack:
+    container_name: localstack
+    image: localstack/localstack-pro
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment: &aws-env
+      AWS_ACCESS_KEY_ID: 12345
+      AWS_SECRET_ACCESS_KEY: xyz
+      AWS_REGION: us-east-1
+      LOCALSTACK_API_KEY: ${LOCALSTACK_API_KEY}
+      DEBUG: 1
+      PERSISTENCE: 1
+      DOCKER_HOST: unix:///var/run/docker.sock
+      SERVICES: lambda:4510
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - localstack_network
+
+  go:
+    build:
+      context: .
+      dockerfile: go/Dockerfile
+    environment:
+      AWS_ACCESS_KEY_ID: 12345
+      AWS_SECRET_ACCESS_KEY: xyz
+      AWS_REGION: us-east-1
+    depends_on:
+      - localstack
+    networks:
+      - localstack_network
+
+
